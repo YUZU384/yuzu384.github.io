@@ -24,16 +24,27 @@ function toggleSection(toggleId, listId) {
 }
 
 async function fetchRepos() {
+    const listEl = document.getElementById('projectList');
+    if (!listEl) return;
+
     try {
         const resp = await fetch(`https://api.github.com/users/${CONFIG.githubUser}/repos?sort=updated&per_page=10`);
+
+        if (!resp.ok) {
+            throw new Error(`HTTP ${resp.status}`);
+        }
+
         const repos = await resp.json();
-        const listEl = document.getElementById('projectList');
-        if (!listEl) return;
+
+        if (!Array.isArray(repos)) {
+            throw new Error('Invalid response format');
+        }
+
         listEl.innerHTML = '';
 
         const filteredRepos = repos.filter(r => r.name !== CONFIG.githubUser);
         if (filteredRepos.length === 0) {
-            listEl.innerHTML = '<p style="padding:12px;color:#999;font-size:13px;">暂无其他项目</p>';
+            renderFallbackProjects(listEl);
             return;
         }
 
@@ -60,10 +71,47 @@ async function fetchRepos() {
             listEl.appendChild(item);
         });
     } catch (e) {
-        console.error('[repos] 加载失败:', e);
-        const listEl = document.getElementById('projectList');
-        if (listEl) listEl.innerHTML = '<p style="padding:12px;color:#999;font-size:13px;">加载失败</p>';
+        renderFallbackProjects(listEl);
     }
+}
+
+function getFallbackProjects() {
+    return [
+        {
+            name: 'YUZU384',
+            html_url: `https://github.com/${CONFIG.githubUser}`,
+            description: '个人主页项目',
+            language: 'JavaScript',
+            homepage: '',
+            has_pages: true
+        }
+    ];
+}
+
+function renderFallbackProjects(listEl) {
+    listEl.innerHTML = '';
+    const fallbackRepos = getFallbackProjects();
+
+    fallbackRepos.forEach(repo => {
+        const item = document.createElement('div');
+        item.className = 'project-item';
+        item.onclick = () => window.open(repo.html_url, '_blank');
+
+        const tagParts = [];
+        if (repo.language) tagParts.push(`<span style="color:${getLangColor(repo.language)}">● ${repo.language}</span>`);
+        if (repo.homepage && repo.has_pages) {
+            tagParts.push(`<a href="${repo.homepage}" target="_blank" onclick="event.stopPropagation();" class="page-link">🌐 访问页面</a>`);
+        }
+
+        item.innerHTML = `
+            <span class="icon">${getRepoIcon(repo.name)}</span>
+            <div>
+                <div class="name">${repo.name}</div>
+                ${repo.description ? `<div class="desc">${repo.description}</div>` : ''}
+                ${tagParts.length > 0 ? `<div class="project-tags">${tagParts.join('<span class="tag-sep">·</span>')}</div>` : ''}
+            </div>`;
+        listEl.appendChild(item);
+    });
 }
 
 function getRepoIcon(name) {

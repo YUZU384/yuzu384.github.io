@@ -147,9 +147,9 @@
 
     <!-- 公共基础 JS（侧栏、lightbox、GitHub API）-->
     <script src="./web/js/main.js"></script>
-    <!-- 主页逻辑（随机画廊）-->
-    <script src="./web/js/home.js"></script>
-    <!-- 文件浏览器逻辑（pic 目录浏览）-->
+    <!-- 文件浏览器逻辑（pic 目录浏览）- 必须在 home.js 之前加载！-->
     <script src="./web/js/browser.js"></script>
+    <!-- 主页逻辑（随机画廊）- 依赖 browser.js 的 onGalleryReady 函数-->
+    <script src="./web/js/home.js"></script>
 </body>
 </html>

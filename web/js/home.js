@@ -1,59 +1,87 @@
-// ========== 随机图片画廊（主页）==========
-// 从 pic/ 真实图片中随机选 6 张展示
+/**
+ * 随机图片画廊模块（主页）
+ * 
+ * 功能说明：
+ * - 从 pic/ 目录的真实图片中随机选取 6 张展示
+ * - 支持异步数据加载（等待 index.json 加载完成）
+ * - 点击图片可打开 Lightbox 大图预览
+ * 
+ * 依赖：
+ * - CONFIG.picPath (来自 main.js)
+ * - allPicData (来自 browser.js，通过 onGalleryReady 回调填充)
+ * - openLightboxImg() (来自 main.js)
+ * - onGalleryReady() (来自 browser.js)
+ */
 
 function initRandomGallery() {
-    const grid = document.getElementById('randomGallery');
+    var grid = document.getElementById('randomGallery');
     if (!grid) return;
 
+    /**
+     * 渲染图片画廊
+     * 从 allPicData.folders 中收集所有图片，随机选取 6 张展示
+     */
     function render() {
-        const allImages = [];
+        var allImages = [];
 
-        allPicData.folders.forEach(folder => {
+        // 遍历所有文件夹，收集图片信息
+        allPicData.folders.forEach(function(folder) {
             if (!folder.files) return;
-            folder.files.forEach(fileName => {
+            folder.files.forEach(function(fileName) {
                 allImages.push({
-                    src: `${CONFIG.picPath}${folder.path}/${fileName}`,
+                    src: CONFIG.picPath + folder.path + '/' + fileName,
                     folder: folder.name,
                     fileName: fileName
                 });
             });
         });
 
+        // 空状态处理
         if (allImages.length === 0) {
-            grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">暂无图片，请在 pic/ 文件夹中添加照片</p>';
+            grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">暂无图片</p>';
             return;
         }
 
-        const selected = shuffleArray([...allImages]).slice(0, 6);
+        // Fisher-Yates 洗牌算法随机选取 6 张
+        var selected = shuffleArray(allImages).slice(0, 6);
 
-        selected.forEach(img => {
-            const item = document.createElement('div');
+        // 清空容器并渲染图片卡片
+        grid.innerHTML = '';
+        selected.forEach(function(img) {
+            var item = document.createElement('div');
             item.className = 'gallery-item';
-            item.onclick = () => openLightboxImg(img.src, `${img.folder} / ${img.fileName}`);
-            item.innerHTML = `
-                <img src="${img.src}" alt="${img.folder}" loading="lazy">
-                <div class="overlay">
-                    <p>${img.folder}</p>
-                    <small>点击查看大图</small>
-                </div>
-            `;
+            item.onclick = function() {
+                openLightboxImg(img.src, img.folder + ' / ' + img.fileName);
+            };
+            item.innerHTML = '<img src="' + img.src + '" alt="' + img.folder + '" loading="lazy">' +
+                '<div class="overlay"><p>' + img.folder + '</p><small>点击查看大图</small></div>';
             grid.appendChild(item);
         });
     }
 
-    if (allPicData.folders.length > 0) {
+    // 数据就绪检测：如果已有数据立即渲染，否则注册回调等待
+    if (allPicData.folders && allPicData.folders.length > 0) {
         render();
     } else {
         onGalleryReady(render);
     }
 }
 
+/**
+ * Fisher-Yates 洗牌算法
+ * 时间复杂度 O(n)，原地打乱数组顺序
+ * @param {Array} array - 待打乱的数组
+ * @returns {Array} 打乱后的数组（原数组的引用）
+ */
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
     return array;
 }
 
+// 页面加载时初始化画廊
 initRandomGallery();
