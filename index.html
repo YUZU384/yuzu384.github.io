@@ -8,6 +8,9 @@
 </head>
 <body>
 
+    <!-- 粒子背景 -->
+    <canvas id="particleCanvas"></canvas>
+
     <!-- 移动端菜单按钮 -->
     <button class="menu-btn" onclick="toggleSidebar()">
         <span></span>
@@ -84,6 +87,7 @@
                 <article class="readme-card readme-content" id="readmeContent">
 
                     <p>你好！我是 YUZU384，一名热爱技术的win开发者。</p>
+
                     <h3>🎯 专长领域</h3>
                     <ul>
                         <li><strong>桌面应用</strong>: WinUI 3, WPF</li>
@@ -92,6 +96,9 @@
 
                     <h3>🚀 我的开源项目</h3>
                     <p>侧边栏展示了我的一些开源项目，欢迎 Star 和 Fork！</p>
+
+                    <h3>📞 想联系我？</h3>
+                    <p>QQ3399701293以及<span class="hover-secret">███</span><img class="secret-img" src="./pic/没事不嫌少，总比没有好.png" alt="secret"></p>
 
                     <hr>
 
@@ -111,7 +118,6 @@
             <!-- 页脚 -->
             <footer>
                 <h3>YUZU384</h3>
-                <p>初三学生 · 开源爱好者</p>
                 <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
                     ↑ 回到顶部
                 </button>
@@ -147,6 +153,8 @@
 
     <!-- 公共基础 JS（侧栏、lightbox、GitHub API）-->
     <script src="./web/js/main.js"></script>
+    <!-- 粒子效果 -->
+    <script src="./web/js/particles.js"></script>
     <!-- 文件浏览器逻辑（pic 目录浏览）- 必须在 home.js 之前加载！-->
     <script src="./web/js/browser.js"></script>
     <!-- 主页逻辑（随机画廊）- 依赖 browser.js 的 onGalleryReady 函数-->
