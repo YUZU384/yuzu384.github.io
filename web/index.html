@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YUZU384 - 个人简介</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <!-- 移动端菜单按钮 -->
+    <button class="menu-btn" onclick="toggleSidebar()">
+        <span></span>
+    </button>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>YUZU384</h2>
+            <p>初三学生 · 开源爱好者</p>
+        </div>
+
+        <div class="projects-section">
+
+            <!-- 回到主页 -->
+            <a href="#" class="home-btn" onclick="showPage('home'); return false;">
+                🏠 回到主页
+            </a>
+
+            <!-- 我的项目 折叠区 -->
+            <div style="margin-top:8px;">
+                <button class="section-toggle open" id="projectToggle" onclick="toggleSection('projectToggle', 'projectList')">
+                    🚀 我的项目
+                    <span class="arrow">▶</span>
+                </button>
+                <div class="project-list open" id="projectList">
+                    <div class="loading">正在加载项目</div>
+                </div>
+            </div>
+
+            <!-- 图片库 折叠区（新增）-->
+            <div style="margin-top:12px;">
+                <button class="section-toggle open" id="galleryToggle" onclick="toggleSection('galleryToggle', 'galleryList')">
+                    🖼️ 图片库
+                    <span class="arrow">▶</span>
+                </button>
+                <div class="project-list open" id="galleryList">
+                    <div class="loading">正在扫描目录</div>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- 遮罩层 -->
+    <div class="overlay-bg" id="overlayBg" onclick="toggleSidebar()"></div>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+
+        <!-- ========== 页面1：主页/介绍页 ========== -->
+        <div class="page active" id="page-home">
+
+            <!-- Hero -->
+            <section class="hero">
+                <div>
+                    <div class="avatar">👨‍💻</div>
+                    <h1>YUZU384</h1>
+                    <h2>👋欢迎来到我的个人主页 </h2>
+                    <p class="subtitle">初三学生 · 开源爱好者</p>
+                    <p class="bio">热爱技术，专注于优雅的代码和用户体验，喜欢探索新技术。</p>
+                    <div class="tags">
+                        <div class="tag"><span>💻</span> 全栈开发</div>
+                        <div class="tag"><span>🌟</span> 开源贡献</div>
+                        <div class="tag"><span>🎨</span> UI/UX 设计</div>
+                        <div class="tag"><span>🖥️</span> WinUI 3</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- README -->
+            <section class="readme-section">
+                <h2>📖 关于我</h2>
+                <article class="readme-card readme-content" id="readmeContent">
+
+                    <p>你好！我是 YUZU384，一名热爱技术的win开发者。</p>
+                    <h3>🎯 专长领域</h3>
+                    <ul>
+                        <li><strong>桌面应用</strong>: WinUI 3, WPF</li>
+                        <li><strong>后端开发</strong>: e, Python</li>
+                    </ul>
+
+                    <h3>🚀 我的开源项目</h3>
+                    <p>侧边栏展示了我的一些开源项目，欢迎 Star 和 Fork！</p>
+
+                    <hr>
+
+                    <blockquote>
+                        <p>"代码如诗，优雅永不过时"</p>
+                    </blockquote>
+                </article>
+            </section>
+
+            <!-- 随机图片画廊（新增）-->
+            <section class="gallery-section">
+                <h2>🖼️ 我の照片</h2>
+                <p>我的日常与cos照片👉👈</p>
+                <div class="gallery-grid" id="randomGallery"></div>
+            </section>
+
+            <!-- 页脚 -->
+            <footer>
+                <h3>YUZU384</h3>
+                <p>初三学生 · 开源爱好者</p>
+                <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                    ↑ 回到顶部
+                </button>
+                <div class="footer-bottom">
+                    © 2026 YUZU384 · Made with ❤️
+                </div>
+            </footer>
+        </div>
+
+        <!-- ========== 页面2：文件浏览器（新增）========== -->
+        <div class="page" id="page-browser">
+            <div class="browser-container">
+                <!-- 面包屑导航 -->
+                <div class="breadcrumb" id="breadcrumb">
+                    <a href="#" onclick="navigateTo('root'); return false;">📁 pic</a>
+                </div>
+
+                <!-- 文件列表区域 -->
+                <div class="file-grid" id="fileGrid">
+                    <div class="loading">正在加载文件...</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close">&times;</button>
+        <img id="lightboxImg" src="" alt="">
+        <div class="lightbox-info" id="lightboxInfo"></div>
+    </div>
+
+    <!-- 公共基础 JS（侧栏、lightbox、GitHub API）-->
+    <script src="./js/main.js"></script>
+    <!-- 主页逻辑（随机画廊）-->
+    <script src="./js/home.js"></script>
+    <!-- 文件浏览器逻辑（pic 目录浏览）-->
+    <script src="./js/browser.js"></script>
+</body>
+</html>
